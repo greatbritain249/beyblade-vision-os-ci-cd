@@ -1,0 +1,48 @@
+# Written by Brenten Dickerson (greatbritain249@gmail.com)
+
+#Add all annotations here
+podAnnotations:
+  proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+
+namespace:  beyblade
+
+deployment: minikube
+
+replicas: 1
+
+mongo:
+  image:
+    registry: 
+      minikube: docker.io
+    pullPolicy: 
+      minikube: IfNotPresent
+    repository: 
+      minikube: mongo
+    tag: "4.2"
+
+  port: 27017
+  storage_class_name: 
+    jwics: default
+    sipr: aws-efs-retain
+    govcloud: aws-efs-retain
+    minikube: standard
+  resources:
+    requests:
+      cpu: "0.125"
+      memory: "256Mi"
+    limits:
+      cpu: ".25"
+      memory: "512Mi"
+  env:
+    common:
+      MONGO_INITDB_DATABASE: "beybladeDB"
+      BEYBLADE_COMPONENT_COLLECTION: "componentCollection" # Beyblade Component Collection for the mongo container [[ required ]]
+      BEYBLADE_METRICS_COLLECTION: "metricsCollection" # Beyblade Metrics Collection for the mongo container [[ required ]]
+      BEYBLADE_BATTLE_MECHANICS_COLLECTION: "battleMechanicsCollections" # Beyblade Battle Mechanics Collection for the mongo container [[ required ]]
+
+    secret:
+      mongo_initdb_username: "adminBeyblader"
+      mongo_initdb_password: "BeybladeLetItRip"
+      beyblade_db_username: "beyblader01"
+      beyblade_db_password: "LetItRip"
+

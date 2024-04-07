@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongodb-deployment
+  name: mongodb
+  namespace: {{ .Values.namespace}}
+spec:
+  replicas: {{ .Values.replicas}}
+  selector:
+    matchLabels:
+      app: mongodb-deployment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mongodb-deployment
+    spec:
+      volumes:
+        - name: beyblade-mongodb-pvc
+          persistentVolumeClaim:
+            claimName: beyblade-mongodb-pvc
+        - name: beyblade-mongodb-config
+          configMap:
+            name: beyblade-mongodb-config-map
+      containers:
+        - name: beyblade-mongodb
+          image: {{ index .Values.mongo.image.registry (printf "%s" .Values.deployment) }}/{{ index .Values.mongo.image.repository (printf "%s" .Values.deployment) }}:{{ .Values.mongo.image.tag}}
+          imagePullPolicy: {{ index .Values.mongo.image.pullPolicy (printf "%s" .Values.deployment) }}
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: beyblade-mongodb-root-credentials
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: beyblade-mongodb-root-credentials
+                  key: password
+            - name: BEYBLADE_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: beyblade-mongodb-beyblade-credentials
+                  key: username
+            - name: BEYBLADE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: beyblade-mongodb-beyblade-credentials
+                  key: password
+            {{- with (index .Values.mongo.env (printf "%s" .Values.deployment)) }}
+            {{- range $key, $val := . }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end}}
+            {{- end}}
+            {{- range $key, $val := .Values.mongo.env.common}}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end}}
+          ports:
+            - containerPort: {{ .Values.mongo.port}}
+              name: mongodb
+          volumeMounts:
+            - name: beyblade-mongodb-config
+              mountPath: "/docker-entrypoint-initdb.d"
+            - name: beyblade-mongodb-pvc
+              mountPath: "/data/db"
+          resources:
+            {{- toYaml .Values.mongo.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-cluster-ip
+  namespace: {{ .Values.namespace}}
+spec:
+  selector:
+    app: mongodb-deployment
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.mongo.port}}
+      targetPort: {{ .Values.mongo.port}}
+      protocol: TCP
