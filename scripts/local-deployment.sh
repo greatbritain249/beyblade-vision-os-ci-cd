@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 function __message() {
   GREEN='\033[0;32m'
   NO_COLOR='\033[0m'
@@ -11,7 +12,8 @@ if [ "$1" = "start" ] ; then
 elif [ "$1" = "stop" ] ; then
   command="down"
   message="Stopping"
+fi
 
 __message "$message MongoDB\n"
-cd local-dev/local-dev-mongo && docker-compose $command -d && cd ~-
+cd local/mongo-db && docker-compose $command -d && cd ~-
 printf "\n"
