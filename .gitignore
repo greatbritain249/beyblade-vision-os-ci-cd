@@ -3,8 +3,3 @@ venv/
 # Helm backup files
 *.tgz
 Chart.lock
-
-docker-compose.yml
-install-mongo-cli.sh
-mongo-init.sh	
-README.md

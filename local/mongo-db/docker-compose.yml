@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.3
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: beybladeDB
+      BEYBLADE_DB_USERNAME: adminBeyblader
+      BEYBLADE_DB_PASSWORD: BeybladeLetItRip
+      BEYBLADE_COMPONENT_COLLECTION: componentCollection # Beyblade Component Collection for the mongo container [[ required ]]
+      BEYBLADE_METRICS_COLLECTION: metricsCollection # Beyblade Metrics Collection for the mongo container [[ required ]]
+      BEYBLADE_BATTLE_MECHANICS_COLLECTION: battleMechanicsCollection # Beyblade Battle Mechanics Collection for the mongo container [[ required ]]
+      BEYBLADE_STADIUM_COLLECTION: stadiumCollection # Beyblade Stadium Collection for the mongo container [[ required ]]
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+      - "./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro"
+
+volumes:
+  mongodb_data:
