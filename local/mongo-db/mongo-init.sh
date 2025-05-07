@@ -6,23 +6,22 @@ mongo <<EOF
       {
         user: 'admin',
         pwd: 'password',
-        roles: [ { role: 'root', db: 'admin' } ]
+        roles: [ { readWrite: 'root', db: 'admin' } ]
       }
     );
 
-    use ${MONGO_INITDB_DATABASE}    db.createUser({
-      user: "${MONGO_INITDB_ROOT_USERNAME}",
-      pwd: "${MONGO_INITDB_ROOT_PASSWORD}",
+    use ${MONGO_INITDB_DATABASE}    
+    db.createUser({
+      user: 'beyblader01',
+      pwd: 'LetItRip',
       roles: [
-        { role: "role", db: "${MONGO_INITDB_DATABASE}" }
+        { role: "readWrite", db: "${MONGO_INITDB_DATABASE}" }
       ]
     })
 
-    use ${MONGO_INITDB_DATABASE}
-
     db.createUser({
-      user: "${BEYBLADE_DB_USERNAME}",
-      pwd: "${BEYBLADE_DB_PASSWORD}",
+      user: 'beyblader02',
+      pwd: 'test',
       roles: [
         { role: "readWrite", db: "${MONGO_INITDB_DATABASE}" }
       ]
