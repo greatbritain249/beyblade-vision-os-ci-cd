@@ -10,17 +10,28 @@ mongo <<EOF
       }
     );
 
+    use ${MONGO_INITDB_DATABASE}    db.createUser({
+      user: "${MONGO_INITDB_ROOT_USERNAME}",
+      pwd: "${MONGO_INITDB_ROOT_PASSWORD}",
+      roles: [
+        { role: "role", db: "${MONGO_INITDB_DATABASE}" }
+      ]
+    })
+
     use ${MONGO_INITDB_DATABASE}
 
     db.createUser({
-      user: "${MONGO_INITDB_ROOT_USERNAME}",
-      pwd: "${MONGO_INITDB_ROOT_PASSWORD}",
+      user: "${BEYBLADE_DB_USERNAME}",
+      pwd: "${BEYBLADE_DB_PASSWORD}",
       roles: [
         { role: "readWrite", db: "${MONGO_INITDB_DATABASE}" }
       ]
     })
 
     db.createCollection("${BEYBLADE_COMPONENT_COLLECTION}");
+    db.createCollection("${BEYBLADE_ORIGIN_COLLECTION}");
+    db.createCollection("${BEYBLADE_HMS_COLLECTION}");
+    db.createCollection("${BEYBLADE_BURST_COLLECTION}");
     db.createCollection("${BEYBLADE_METRICS_COLLECTION}");
     db.createCollection("${BEYBLADE_BATTLE_MECHANICS_COLLECTION}");
     db.createCollection("${BEYBLADE_STADIUM_COLLECTION}");

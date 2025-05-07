@@ -3,7 +3,7 @@ version: '3.7'
 services:
   mongodb:
     container_name: mongodb
-    image: mongo:4.3
+    image: mongo:4.2
     command: mongod --auth
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -12,6 +12,9 @@ services:
       BEYBLADE_DB_USERNAME: adminBeyblader
       BEYBLADE_DB_PASSWORD: BeybladeLetItRip
       BEYBLADE_COMPONENT_COLLECTION: componentCollection # Beyblade Component Collection for the mongo container [[ required ]]
+      BEYBLADE_ORIGIN_COLLECTION: originCollection # Beyblade Origin Collection for the mongo container [[ required ]]
+      BEYBLADE_HMS_COLLECTION: hmsCollection # Beyblade HMS Collection for the mongo container [[ required ]]
+      BEYBLADE_BURST_COLLECTION: burstCollection # Beyblade Burst Collection for the mongo container [[ required ]]
       BEYBLADE_METRICS_COLLECTION: metricsCollection # Beyblade Metrics Collection for the mongo container [[ required ]]
       BEYBLADE_BATTLE_MECHANICS_COLLECTION: battleMechanicsCollection # Beyblade Battle Mechanics Collection for the mongo container [[ required ]]
       BEYBLADE_STADIUM_COLLECTION: stadiumCollection # Beyblade Stadium Collection for the mongo container [[ required ]]
