@@ -6,7 +6,9 @@ mongo <<EOF
       {
         user: 'admin',
         pwd: 'password',
-        roles: [ { readWrite: 'root', db: 'admin' } ]
+        roles: [ 
+          { role: 'readWrite', db: 'admin' }
+        ]
       }
     );
 
